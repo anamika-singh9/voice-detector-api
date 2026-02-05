@@ -3,9 +3,16 @@ from fastapi import FastAPI, Header
 from audio_utils import base64_to_wav
 from predict import predict
 
-API_KEY = os.getenv("API_KEY")  # default mat rakho
+API_KEY = os.getenv("API_KEY")
 
-LANGS = {"Tamil", "English", "Hindi", "Malayalam", "Telugu","english","tamil","hindi","malyalam","telgu","auto","Auto"}
+LANGS = {
+    "english",
+    "tamil",
+    "hindi",
+    "malayalam",
+    "telugu",
+    "auto"
+}
 
 app = FastAPI()
 
@@ -23,10 +30,11 @@ def detect(payload: dict, x_api_key: str = Header(None)):
         return {"status": "error", "message": "Invalid API key"}
 
     try:
-        if payload["language"].strip().lower() not in LANGS:
+        lang = payload["language"].strip().lower()
+        if lang not in LANGS:
             raise ValueError("Invalid language")
 
-        if payload["audioFormat"].lower() != "mp3":
+        if payload["audioFormat"].strip().lower() != "mp3":
             raise ValueError("Invalid audio format")
 
         audio = base64_to_wav(payload["audioBase64"])
@@ -40,7 +48,7 @@ def detect(payload: dict, x_api_key: str = Header(None)):
 
         return {
             "status": "success",
-            "language": payload["language"],
+            "language": lang,
             "classification": result["label"],
             "confidenceScore": result["confidence"],
             "explanation": explanation
