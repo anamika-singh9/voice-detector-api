@@ -5,7 +5,7 @@ from predict import predict
 
 API_KEY = os.getenv("API_KEY")  # default mat rakho
 
-LANGS = {"Tamil", "English", "Hindi", "Malayalam", "Telugu"}
+LANGS = {"Tamil", "English", "Hindi", "Malayalam", "Telugu","english","tamil","hindi","malyalam","telgu","auto","Auto"}
 
 app = FastAPI()
 
@@ -23,7 +23,7 @@ def detect(payload: dict, x_api_key: str = Header(None)):
         return {"status": "error", "message": "Invalid API key"}
 
     try:
-        if payload["language"] not in LANGS:
+        if payload["language"].strip().lower() not in LANGS:
             raise ValueError("Invalid language")
 
         if payload["audioFormat"].lower() != "mp3":
