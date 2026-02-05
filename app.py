@@ -3,11 +3,15 @@ from fastapi import FastAPI, Header
 from audio_utils import base64_to_wav
 from predict import predict
 
-API_KEY = os.getenv("API_KEY")  # ❗ default mat rakho
+API_KEY = os.getenv("API_KEY")  # default mat rakho
 
 LANGS = {"Tamil", "English", "Hindi", "Malayalam", "Telugu"}
 
 app = FastAPI()
+
+@app.get("/")
+def root():
+    return {"status": "running"}
 
 @app.post("/api/voice-detection")
 def detect(payload: dict, x_api_key: str = Header(None)):

@@ -3,9 +3,13 @@ import sys
 import librosa
 from model import extract_embedding
 
+BASE_DIR = Path(__file__).resolve().parent
+MODEL_PATH = BASE_DIR / "classifier.pt"
+
 classifier = torch.nn.Linear(768, 2)
 classifier.load_state_dict(
-    torch.load("saved_models/classifier.pt", map_location="cpu")
+    torch.load(MODEL_PATH, map_location="cpu")
+
 )
 classifier.eval()
 
